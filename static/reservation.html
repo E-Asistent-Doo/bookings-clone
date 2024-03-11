@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/notie/dist/notie.min.css">
+
+    <title>Bookings</title>
+
+    <style>
+      .footer {
+        height: 5em;
+        background-color: #163B65;
+        margin-top: 1.5em;
+        padding: 1em;
+        color: #FFFFFF;
+      }
+
+      .notie-container {
+      box-shadow: none;
+    }
+
+    </style>
+
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Navbar scroll</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarScroll">
+          <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="index.html">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="about.html">About</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Rooms
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                <li><a class="dropdown-item" href="generals.html">General's Quarters</a></li>
+                <li><a class="dropdown-item" href="majors.html">Major's Suite</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="#">Something else here</a></li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="reservation.html" tabindex="-1" aria-disabled="true">Book now</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link disabled" href="contact.html" tabindex="-1" aria-disabled="true">Contact</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    
+    <div class="container">
+
+        <div class="row">
+            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 d-block mx-auto">
+                <h1 class="mt-5">Search for Availability</h1>
+
+                <form action="/reservation.html" method="get">
+
+                  <div class="row">
+                    <div class="col">
+                      <div class="form-group">
+                        <label for="start_date" class="form-label">Starting date</label>
+                        <input type="date" class="form-control" id="start_date" aria-describedby="startDateHelp" placeholder="Arrival">
+                        <small id="startDateHelp" class="form-text form-muted">Enter your starting date in the form of YYYY-MM-DD.</small>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="form-group">
+                        <label for="end_date" class="form-label">Ending date</label>
+                        <input type="date" class="form-control" id="end_date" aria-describedby="endDateHelp" placeholder="Departure">
+                        <small id="endDateHelp" class="form-text form-muted">Enter your ending date in the form of YYYY-MM-DD.</small>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button type="submit" class="btn btn-primary">Search Availability</button>
+                </form>
+            </div>
+        </div>
+
+        <button class="btn btn-success" onclick="alert('Hej ti', 'success')">Click me</button>
+        <button class="btn btn-danger" onclick="attention.toast({msg: 'Hej bajo'});">Click me 2</button>
+        <button id="sbb" class="btn btn-warning">Super blesavi button</button>
+
+    </div>
+
+
+    <footer class="py-3 my-4">
+        <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+          <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Home</a></li>
+          <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Features</a></li>
+          <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Pricing</a></li>
+          <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">FAQs</a></li>
+          <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">About</a></li>
+        </ul>
+        <p class="text-center text-muted">&copy; 2021 Company, Inc</p>
+      </footer>
+    </div>
+
+
+
+
+
+
+
+    <script>
+
+      (function() {
+          'use strict';
+          window.addEventListener('load', function() {
+
+              let forms = document.getElementsByClassName('needs-validation');
+
+              Array.prototype.filter.call(forms, function(form) {
+
+                  form.addEventListener('submit', function(event) {
+                      if(form.checkValidity() === false) {
+                          event.preventDefault();
+                          event.stopPropagation();
+                      }
+
+                      form.classList.add('was-validated');
+                  }, false);
+              });
+          }, false);
+
+      })();
+
+
+      //Type for example success, error, warning
+      function alert(msg, type) {
+        notie.alert({
+          type: type,
+          text: msg
+        })
+      }
+
+
+      function Prompt() {
+
+        const toast = function(c) {
+
+          const {msg = "", icon = "success", position = "top-end"} = c;
+
+          const Toast = Swal.mixin({
+            toast: true,
+            title: msg,
+            position: position,
+            icon: icon,
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer)
+              toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+          });
+
+
+          Toast.fire({});
+        }
+
+        const success = function() {
+
+          const {msg = "", title = "", footer = ""} = c;
+
+          Swal.fire({
+            icon: "success",
+            title: title,
+            text: msg,
+            footer: footer
+          })
+        }
+
+        
+        const error = function() {
+
+        const {msg = "", title = "", footer = ""} = c;
+
+        Swal.fire({
+          icon: "error",
+          title: title,
+          text: msg,
+          footer: footer
+        })
+        }
+
+        return {
+          toast,
+          success,
+          error
+        }
+      }
+
+      const attention = new Prompt();
+
+
+      async function custom(c) {
+
+        const {msg = "", title = ""} = c;
+
+        const { value: formValues } = await Swal.fire({
+          title: title,
+          html: msg,
+          backdrop: false,
+          focusConfirm: false,
+          showCancelButton: true,
+          willOpen: () => {
+            const elem = document.getElementById('reservation-dates-modal');
+            // const rp = new DateRangePicker(elem, {
+            //   format: 'yyyy-mm-dd',
+            //   showOnFocus: true
+            // })
+          },
+          preConfirm: () => {
+            return [
+              document.getElementById('start').value,
+              document.getElementById('end').value
+            ]
+          },
+          didOpen: () => {
+            document.getElementById('start').removeAttribute('disable');
+            document.getElementById('end').removeAttribute('disable');
+          }
+          })
+
+          if(formValues) {
+            Swal.fire(JSON.stringify(formValues))
+          }
+      }
+      
+      const button = document.getElementById('sbb').addEventListener('click', () => {
+        const html = `<form action="/reservation.html" method="get">
+
+                        <div class="row">
+                          <div class="col">
+                            <div class="form-group">
+                              <label for="start_date" class="form-label">Starting date</label>
+                              <input type="date" class="form-control" id="start_date" aria-describedby="startDateHelp" placeholder="Arrival">
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group">
+                              <label for="end_date" class="form-label">Ending date</label>
+                              <input type="date" class="form-control" id="end_date" aria-describedby="endDateHelp" placeholder="Departure">
+                            </div>
+                          </div>
+                        </div>
+                      </form>`
+
+          custom({
+            msg: html,
+            title: 'Random title'
+          })
+        
+      })
+
+    </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script src="https://unpkg.com/notie"></script>
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+    -->
+  </body>
+</html>
