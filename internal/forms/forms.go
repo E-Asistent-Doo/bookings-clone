@@ -2,7 +2,6 @@ package forms
 
 import (
 	"fmt"
-	"net/http"
 	"net/url"
 	"strings"
 
@@ -39,9 +38,9 @@ func (f *Form) Required(fields ...string) {
 	}
 }
 
-func (f *Form) Has(field string, r *http.Request) bool {
+func (f *Form) Has(field string) bool {
 
-	x := r.Form.Get(field)
+	x := f.Get(field)
 
 	if x == "" {
 		f.Errors.Add(field, "This field cannot be blank")
@@ -51,9 +50,14 @@ func (f *Form) Has(field string, r *http.Request) bool {
 	return true
 }
 
-func (f *Form) MinLength(field string, length int, r *http.Request) bool {
+func (f *Form) MinLength(field string, length int) bool {
 
-	x := r.Form.Get(field)
+	if length <= 0 {
+		fmt.Println("Tried to specify MinLength validator to be less or equal to zero (length <= 0)")
+		return false
+	}
+
+	x := f.Get(field)
 
 	if len(x) < length {
 		f.Errors.Add(field, fmt.Sprintf("This field must to be at least %d characters long", length))
