@@ -15,6 +15,7 @@ func routes(app *config.AppConfig) http.Handler {
 
 	// mux.Get("/", http.HandlerFunc(handlers.Repo.Home))
 	// mux.Get("/about", http.HandlerFunc(handlers.Repo.About))
+	app.InfoLog.Println("Routes configuration init...")
 
 	mux := chi.NewRouter()
 
@@ -38,10 +39,33 @@ func routes(app *config.AppConfig) http.Handler {
 
 	mux.Get("/reservation-summary", handlers.Repo.ReservationSummary)
 
+	mux.Get("/choose-room/{id}", handlers.Repo.ChooseRoom)
+	mux.Get("/book-room", handlers.Repo.BookRoom)
+
 	mux.Get("/contact", handlers.Repo.Contact)
+
+	mux.Get("/user/login", handlers.Repo.ShowLogin)
+	mux.Post("/user/login", handlers.Repo.PostShowLogin)
+	mux.Get("/user/logout", handlers.Repo.Logout)
 
 	fileServer := http.FileServer(http.Dir("./static/"))
 	mux.Handle("/static/*", http.StripPrefix("/static", fileServer))
+
+	mux.Route("/admin", func(mux chi.Router) {
+		mux.Use(Auth)
+		mux.Get("/dashboard", handlers.Repo.AdminDashboard)
+
+		mux.Get("/reservations-new", handlers.Repo.AdminNewReservations)
+		mux.Get("/reservations-all", handlers.Repo.AdminAllReservations)
+		mux.Get("/reservation-calendar", handlers.Repo.AdminReservationsCalendar)
+		mux.Post("/reservation-calendar", handlers.Repo.AdminPostReservationsCalendar)
+		mux.Get("/process-reservation/{src}/{id}/do", handlers.Repo.AdminProcessReservation)
+		mux.Get("/delete-reservation/{src}/{id}/do", handlers.Repo.AdminDeleteReservation)
+
+		mux.Get("/reservations/{src}/{id}/show", handlers.Repo.AdminShowsReservation)
+		mux.Post("/reservations/{src}/{id}/show", handlers.Repo.AdminPostShowsReservation)
+
+	})
 
 	return mux
 }

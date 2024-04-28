@@ -6,9 +6,11 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/exec"
 	"time"
 
 	"github.com/aleksaDam997/bookings/internal/config"
+	"github.com/aleksaDam997/bookings/internal/driver"
 	"github.com/aleksaDam997/bookings/internal/handlers"
 	"github.com/aleksaDam997/bookings/internal/helpers"
 	"github.com/aleksaDam997/bookings/internal/models"
@@ -26,29 +28,76 @@ var errorLog *log.Logger
 
 func main() {
 
-	err := run()
+	helpers.NewHelpers(&app)
+
+	dbConnPollSettings := helpers.ExecFlag()
+
+	db, err := run(dbConnPollSettings)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Printf("Starting application on port %s", portNumber)
+	defer db.SQL.Close()
+
+	defer close(app.MailChan)
+	fmt.Println("Starting mail listener...")
+	listenForMail()
 
 	srv := &http.Server{
 		Addr:    portNumber,
 		Handler: routes(&app),
 	}
 
+	log.Println("Routes configured!")
+
+	fmt.Println("Starting application on port", portNumber)
+
+	link := fmt.Sprintf("http://localhost%s", portNumber)
+
+	if *dbConnPollSettings.OpenFlag {
+		fmt.Println("Opening link in the default browser...")
+
+		// cmd := exec.Command("xdg-open", link) // for Linux
+		// cmd := exec.Command("open", link) // for macOS
+		cmd := exec.Command("cmd", "/c", "start", link) // for Windows
+
+		err := cmd.Start()
+
+		if err != nil {
+			fmt.Println("Error opening link:", err)
+		}
+	} else {
+		fmt.Println("To open the link in the default browser, run with the -o flag.")
+	}
+
+	const (
+		colorGreen = "\033[32m"
+		colorBlue  = "\033[34m"
+		colorReset = "\033[0m"
+	)
+
+	if _, err := fmt.Fprint(os.Stdout, "Link: "); err != nil {
+		fmt.Println("Error printing link:", err)
+	}
+	if _, err := fmt.Fprintf(os.Stdout, "%s%s%s\n", colorGreen, link, colorReset); err != nil {
+		fmt.Println("Error printing link:", err)
+	}
+
 	err = srv.ListenAndServe()
 	log.Fatal(err)
 }
 
-func run() error {
+func run(dbConnPoolSettings models.DBConnPoolSettings) (*driver.DB, error) {
 
 	gob.Register(models.Reservation{})
+	gob.Register(models.User{})
+	gob.Register(models.Room{})
+	gob.Register(models.Restriction{})
+	gob.Register(map[string]int{})
 
-	//Change this to true when in production
-	app.InProduction = false
+	mailChan := make(chan models.MailData)
+	app.MailChan = mailChan
 
 	infoLog = log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	app.InfoLog = infoLog
@@ -64,21 +113,28 @@ func run() error {
 
 	app.Session = session
 
+	//connect to database
+	log.Println("Connecting to database...")
+	connString := fmt.Sprintf("host=%s port=%s dbname=%s user=%s password=%s", *dbConnPoolSettings.DBHost, *dbConnPoolSettings.DBPort, *dbConnPoolSettings.DBName, *dbConnPoolSettings.DBUser, *dbConnPoolSettings.DBPass)
+	db, err := driver.ConnectSQL(connString)
+
+	if err != nil {
+		log.Fatal("Cannot connect to database! Dying...")
+	}
+
 	tc, err := render.CreateTemplateCache()
 
 	if err != nil {
 		log.Fatal("cannot create template cache")
-		return err
+		return nil, err
 	}
 
 	app.TemplateCache = tc
-	app.UseCache = false
 
-	repo := handlers.NewRepo(&app)
+	repo := handlers.NewRepo(&app, db)
 	handlers.NewHandlers(repo)
-	helpers.NewHelpers(&app)
 
-	render.NewTemplates(&app)
+	render.NewRenderer(&app)
 
-	return nil
+	return db, nil
 }

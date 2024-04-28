@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"testing"
 	"time"
 
 	"github.com/aleksaDam997/bookings/internal/config"
@@ -22,11 +23,21 @@ import (
 var app config.AppConfig
 var session *scs.SessionManager
 var pathToTemplates = "./../../templates"
-var functions = template.FuncMap{}
 
-func getRoutes() http.Handler {
+var functions = template.FuncMap{
+	"humanDate":  render.HumanDate,
+	"formatDate": render.FormatDate,
+	"iterate":    render.Iterate,
+	"add":        render.Add,
+}
+
+func TestMain(m *testing.M) {
 	// what am I going to put in the session
 	gob.Register(models.Reservation{})
+	gob.Register(models.User{})
+	gob.Register(models.Room{})
+	gob.Register(models.Restriction{})
+	gob.Register(map[string]int{})
 
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	app.InfoLog = infoLog
@@ -46,6 +57,12 @@ func getRoutes() http.Handler {
 
 	app.Session = session
 
+	mailChan := make(chan models.MailData)
+	app.MailChan = mailChan
+	defer close(mailChan)
+
+	listenForMail()
+
 	tc, err := CreateTestTemplateCache()
 	if err != nil {
 		log.Fatal("cannot create template cache")
@@ -54,10 +71,24 @@ func getRoutes() http.Handler {
 	app.TemplateCache = tc
 	app.UseCache = true
 
-	repo := NewRepo(&app)
+	repo := NewTestRepo(&app)
 	NewHandlers(repo)
 
-	render.NewTemplates(&app)
+	render.NewRenderer(&app)
+
+	os.Exit(m.Run())
+}
+
+func listenForMail() {
+	go func() {
+		for {
+			// _ = <-app.MailChan
+			<-app.MailChan
+		}
+	}()
+}
+
+func getRoutes() http.Handler {
 
 	mux := chi.NewRouter()
 
@@ -79,6 +110,22 @@ func getRoutes() http.Handler {
 	mux.Get("/make-reservation", Repo.Reservation)
 	mux.Post("/make-reservation", Repo.PostReservation)
 	mux.Get("/reservation-summary", Repo.ReservationSummary)
+
+	mux.Get("/user/login", Repo.ShowLogin)
+	mux.Post("/user/login", Repo.PostShowLogin)
+	mux.Get("/user/logout", Repo.Logout)
+
+	mux.Get("/admin/dashboard", Repo.AdminDashboard)
+
+	mux.Get("/admin/reservations-new", Repo.AdminNewReservations)
+	mux.Get("/admin/reservations-all", Repo.AdminAllReservations)
+	mux.Get("/admin/reservation-calendar", Repo.AdminReservationsCalendar)
+	mux.Post("/admin/reservation-calendar", Repo.AdminPostReservationsCalendar)
+	mux.Get("/admin/process-reservation/{src}/{id}/do", Repo.AdminProcessReservation)
+	mux.Get("/admin/delete-reservation/{src}/{id}/do", Repo.AdminDeleteReservation)
+
+	mux.Get("/admin/reservations/{src}/{id}/show", Repo.AdminShowsReservation)
+	mux.Post("/admin/reservations/{src}/{id}", Repo.AdminPostShowsReservation)
 
 	fileServer := http.FileServer(http.Dir("./static/"))
 	mux.Handle("/static/*", http.StripPrefix("/static", fileServer))

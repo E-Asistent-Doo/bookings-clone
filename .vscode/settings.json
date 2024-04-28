@@ -3,6 +3,12 @@
         "template": "html"
     },
     "go-template.languages": [
-        "tmpl"
-    ]
+        "tmpl",
+        "tpl"
+    ],
+    "files.associations": {
+        "*.tmpl": "html",
+        "*.tpl": "html"
+      }
 }
+

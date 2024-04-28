@@ -1,243 +1,171 @@
 {{define "base"}}
-<!doctype html>
-<html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!doctype html>
+    <html lang="en">
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="https://unpkg.com/notie/dist/notie.min.css">
-    <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>Bookings</title>
+        <title>Bookings</title>
 
-  </head>
-  <body>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+              integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2"
+              crossorigin="anonymous">
+        <link rel="stylesheet"
+              href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.0/dist/css/datepicker-bs4.min.css">
+        <link rel="stylesheet" type="text/css" href="https://unpkg.com/notie/dist/notie.min.css">
+        <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
+    </head>
+
+    <body>
+
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#">Navbar scroll</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
+        <a class="navbar-brand" href="#">Navbar</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarScroll">
-          <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="/">Home <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/about">About</a>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Rooms
-              </a>
-              <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
-                <li><a class="dropdown-item" href="/generals-quarters">General's Quarters</a></li>
-                <li><a class="dropdown-item" href="/majors-suite">Major's Suite</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="/make-reservation">Make reservation :)</a></li>
-              </ul>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/search-availability" tabindex="-1">Book now</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link disabled" href="/contact" tabindex="-1" aria-disabled="true">Contact</a>
-            </li>
-          </ul>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/about">About</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Rooms
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/generals-quarters">General's Quarters</a>
+                        <a class="dropdown-item" href="/majors-suite">Major's Suite</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/search-availability" tabindex="-1" aria-disabled="true">Book Now</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/contact" tabindex="-1" aria-disabled="true">Contact</a>
+                </li>
+                <li class="nav-item"></li>
+                    {{if eq .IsAuthenticated 1}}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                                Admin
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="/admin/dashboard">Dashboard</a>
+                                <a class="dropdown-item" href="/user/logout">Logout</a>
+                            </div>
+                        </li>     
+                    {{else}}
+                        <a class="nav-link" href="/user/login" tabindex="-1" aria-disabled="true">Login</a>
+                    {{end}}
+                </li>
+            </ul>
+
         </div>
-      </div>
     </nav>
-        
-        {{block "content" .}}
 
-        {{end}}
+    {{block "content" .}}
 
-        {{block "js" .}}
-
-        {{end}}
+    {{end}}
 
 
-    <footer class="py-3 my-4 bg-dark text-light">
-        <ul class="nav justify-content-center border-bottom pb-3 mb-3">
-          <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Home</a></li>
-          <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Features</a></li>
-          <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Pricing</a></li>
-          <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">FAQs</a></li>
-          <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">About</a></li>
-        </ul>
-        <p class="text-center text-muted">&copy; 2021 Company, Inc</p>
-      </footer>
+    <div class="row my-footer">
+
+        <div class="col">
+            Left
+        </div>
+
+        <div class="col">
+            Middle
+        </div>
+
+        <div class="col">
+            Right
+        </div>
+
     </div>
 
 
-
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+            integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js"
+            integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.0/dist/js/datepicker-full.min.js"></script>
     <script src="https://unpkg.com/notie"></script>
-    <!-- Optional JavaScript; choose one of the two! -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="/static/js/app.js"></script>
 
-    <!-- Option 1: Bootstrap Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    {{block "js" .}}
 
-    <!-- Option 2: Separate Popper and Bootstrap JS -->
-    <!--
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
-    -->
+    {{end}}
 
     <script>
+        let attention = Prompt();
 
-      (function() {
-          'use strict';
-          window.addEventListener('load', function() {
-
-              let forms = document.getElementsByClassName('needs-validation');
-
-              Array.prototype.filter.call(forms, function(form) {
-
-                  form.addEventListener('submit', function(event) {
-                      if(form.checkValidity() === false) {
-                          event.preventDefault();
-                          event.stopPropagation();
-                      }
-
-                      form.classList.add('was-validated');
-                  }, false);
-              });
-          }, false);
-
-      })();
+        (function () {
+            'use strict';
+            window.addEventListener('load', function () {
+                // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                let forms = document.getElementsByClassName('needs-validation');
+                // Loop over them and prevent submission
+                Array.prototype.filter.call(forms, function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
 
 
-      //Type for example success, error, warning
-      function notify(msg, type) {
-        notie.alert({
-          type: type,
-          text: msg
-        })
-      }
-
-      {{with .Error}}
-        notify("{{.}}", "error")
-      {{end}}
-
-      {{with .Flash}}
-        notify("{{.}}", "success")
-      {{end}}
-
-      {{with .Warning}}
-        notify("{{.}}", "warning")
-      {{end}}
-      function Prompt() {
-
-        const toast = function(c) {
-
-          const {msg = "", icon = "success", position = "top-end"} = c;
-
-          const Toast = Swal.mixin({
-            toast: true,
-            title: msg,
-            position: position,
-            icon: icon,
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-              toast.addEventListener('mouseenter', Swal.stopTimer)
-              toast.addEventListener('mouseleave', Swal.resumeTimer)
-            }
-          });
-
-
-          Toast.fire({});
+        function notify(msg, msgType) {
+            notie.alert({
+                type: msgType,
+                text: msg,
+            })
         }
 
-        const success = function() {
-
-          const {msg = "", title = "", footer = ""} = c;
-
-          Swal.fire({
-            icon: "success",
-            title: title,
-            text: msg,
-            footer: footer
-          })
+        function notifyModal(title, text, icon, confirmationButtonText) {
+            Swal.fire({
+                title: title,
+                html: text,
+                icon: icon,
+                confirmButtonText: confirmationButtonText
+            })
         }
 
-        
-        const error = function() {
+        {{with .Error}}
+            notify("{{.}}", "error")
+        {{end}}
 
-        const {msg = "", title = "", footer = ""} = c;
+        {{with .Flash}}
+            notify("{{.}}", "success")
+        {{end}}
 
-        Swal.fire({
-          icon: "error",
-          title: title,
-          text: msg,
-          footer: footer
-        })
-        }
-
-        return {
-          toast,
-          success,
-          error
-        }
-      }
-
-      const attention = new Prompt();
-
-
-      async function custom(c) {
-        const { msg = "", title = "" } = c;
-
-        const { value: result } = await Swal.fire({
-          title: title,
-          html: msg,
-          backdrop: false,
-          focusConfirm: false,
-          showCancelButton: true,
-          willOpen: () => {
-            
-            if (c.willOpen !== undefined) c.willOpen();
-
-            // const elem = document.getElementById('reservation-dates-modal');
-            // const rp = new DateRangePicker(elem, {
-            //   format: 'yyyy-mm-dd',
-            //   showOnFocus: true
-            // })
-          },
-          preConfirm: () => {
-            return [
-              document.getElementById('start_date').value,
-              document.getElementById('end_date').value
-            ];
-          },
-          didOpen: () => {
-            if(c.didOpen !== undefined) c.didOpen();
-          }
-        });
-
-        if (result) {
-          if (result.dismiss !== Swal.DismissReason.cancel) {
-            if (result.value !== "") {
-              if (c.callback !== undefined) {
-                c.callback(result);
-              }
-            } else {
-              c.callback(false);
-            }
-          } else {
-            c.callback(false);
-          }
-        }
-      }
-
+        {{with .Warning}}
+            notify("{{.}}", "warning")
+        {{end}}
     </script>
 
+    </body>
 
-  </body>
-</html>
+    </html>
 {{end}}

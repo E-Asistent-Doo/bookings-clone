@@ -1,95 +1,124 @@
 {{template "base" .}}
 
 {{define "content"}}
-
-<div class="container">
+    <div class="container">
 
         <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 d-block mx-auto">
-                <img src="/static/images/generals-quarters.png" class="img-fluid img-thumbnail" alt="room image">
+            <div class="col">
+                <img src="/static/images/generals-quarters.png"
+                     class="img-fluid img-thumbnail mx-auto d-block room-image" alt="room image">
             </div>
         </div>
 
-      <div class="row">
-        <div class="col">
-          <h1 class="text-center mt-4">
-            General's quarters
-          </h1>
-          <p>
-            Your home away from home, set on the majestic waters of the Atlantic Ocean, this will be a vacation to remember.
-            Your home away from home, set on the majestic waters of the Atlantic Ocean, this will be a vacation to remember.
-            Your home away from home, set on the majestic waters of the Atlantic Ocean, this will be a vacation to remember.
-            Your home away from home, set on the majestic waters of the Atlantic Ocean, this will be a vacation to remember.
-            Your home away from home, set on the majestic waters of the Atlantic Ocean, this will be a vacation to remember.
-          </p>
+
+        <div class="row">
+            <div class="col">
+                <h1 class="text-center mt-4">General's Quarters</h1>
+                <p>
+                    Your home away form home, set on the majestic waters of the Atlantic Ocean, this will be a vacation
+                    to remember.
+                    Your home away form home, set on the majestic waters of the Atlantic Ocean, this will be a vacation
+                    to remember.
+                    Your home away form home, set on the majestic waters of the Atlantic Ocean, this will be a vacation
+                    to remember.
+                    Your home away form home, set on the majestic waters of the Atlantic Ocean, this will be a vacation
+                    to remember.
+                    Your home away form home, set on the majestic waters of the Atlantic Ocean, this will be a vacation
+                    to remember.
+                    Your home away form home, set on the majestic waters of the Atlantic Ocean, this will be a vacation
+                    to remember.
+                </p>
+            </div>
         </div>
-      </div>
-      <div class="row">
-        <a id="search-availability-btn" href="make-reservation-gq" class="btn btn-success">Check availability</a>
-      </div>
+
+
+        <div class="row">
+
+            <div class="col text-center">
+
+                <a id="check-availability-button" href="#!" class="btn btn-success">Check Availability</a>
+
+            </div>
+        </div>
 
 
     </div>
-
 {{end}}
 
-{{block "js" .}}
-            <script>
-
-
-                document.getElementById("search-availability-btn").addEventListener('click', (e) => {
-                    e.preventDefault();
-
-                        const html = `<form id="check-availability-form" action="" method="post" novalidate class="needs-validation">
-
-                        <div class="row">
-                          <div class="col">
-                            <div class="form-group">
-                              <label for="start_date" class="form-label">Starting date</label>
-                              <input type="date" class="form-control" id="start_date" aria-describedby="startDateHelp" placeholder="Arrival">
+{{define "js"}}
+    <script>
+        document.getElementById("check-availability-button").addEventListener("click", function () {
+            let html = `
+                <form id="check-availability-form" action="" method="post" novalidate class="needs-validation">
+                    <div class="form-row">
+                        <div class="col">
+                            <div class="form-row" id="reservation-dates-modal">
+                                <div class="col">
+                                    <input disabled required class="form-control" type="text" name="start_date" id="start_date" placeholder="Arrival">
+                                </div>
+                                <div class="col">
+                                    <input disabled required class="form-control" type="text" name="end_date" id="end_date" placeholder="Departure">
+                                </div>
                             </div>
-                          </div>
-                          <div class="col">
-                            <div class="form-group">
-                              <label for="end_date" class="form-label">Ending date</label>
-                              <input type="date" class="form-control" id="end_date" aria-describedby="endDateHelp" placeholder="Departure">
-                            </div>
-                          </div>
                         </div>
-                      </form>`
+                    </div>
+                </form>
+                `
+            attention.custom({
+                msg: html,
+                title: "Choose your dates",
 
-                        custom({
-                            msg: html,
-                            title: 'Random title',
-                            willOpen: () => {
-                              const elem = document.getElementById('reservation-dates-modal');
-                              // const rp = new DateRangePicker(elem, {
-                              //   format: 'yyyy-mm-dd',
-                              //   showOnFocus: true
-                              // })
-                            },
-                            didOpen: () => {
-                              document.getElementById('start_date').removeAttribute('disabled');
-                              document.getElementById('end_date').removeAttribute('disabled');
-                            },
-                            callback: function (result) {
-                              console.log(result);
+                willOpen: () => {
+                    const elem = document.getElementById('reservation-dates-modal');
+                    const rp = new DateRangePicker(elem, {
+                        format: 'yyyy-mm-dd',
+                        showOnFocus: true,
+                        minDate: new Date(),
+                    })
+                },
 
-                              let form = document.getElementById("check-availability-form");
-                              let formData = new FormData(form);
-                              formData.append("csrf_token", "{{.CSRFToken}}")
+                didOpen: () => {
+                    document.getElementById('start_date').removeAttribute('disabled');
+                    document.getElementById('end_date').removeAttribute('disabled');
 
-                              fetch('/search-availability-json', {
-                                method: "post",
-                                body: formData
-                              })
-                                .then(response => response.json())
-                                .then(data => {
-                                  console.log(data);
+                },
+
+                callback: function (result) {
+                    console.log("called");
+
+                    let form = document.getElementById("check-availability-form");
+                    let formData = new FormData(form);
+                    formData.append("csrf_token", "{{.CSRFToken}}");
+                    formData.append("room_id", "1");
+
+                    fetch('/search-availability-json', {
+                        method: "post",
+                        body: formData,
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.ok) {
+                                attention.custom({
+                                    icon: 'success',
+                                    showConfirmButton: false,
+                                    msg: '<p>Room is available!</p>'
+                                        + '<p><a href="/book-room?id='
+                                        + data.room_id
+                                        + '&s='
+                                        + data.start_date
+                                        + '&e='
+                                        + data.end_date
+                                        + '" class="btn btn-primary">'
+                                        + 'Book now!</a></p>',
+                                })
+                            } else {
+                                attention.error({
+                                    msg: "No availability",
                                 })
                             }
                         })
-                })
-            </script>
-        {{end}}
-
+                }
+            });
+        })
+    </script>
+{{end}}

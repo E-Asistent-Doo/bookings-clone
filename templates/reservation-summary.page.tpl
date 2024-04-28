@@ -1,14 +1,13 @@
 {{template "base" .}}
 
 {{define "content"}}
-
-{{$res := index .Data "reservation"}}
-
-<div class="container">
-
+    {{$res := index .Data "reservation"}}
+    <div class="container">
         <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 d-block mx-auto">
-                <h1 class="mt-5"> Reservation summary</h1>
+            <div class="col">
+                <h1 class="mt-5">Reservation Summary</h1>
+
+                <hr>
 
                 <table class="table table-striped">
                     <thead></thead>
@@ -18,12 +17,16 @@
                             <td>{{$res.FirstName}} {{$res.LastName}}</td>
                         </tr>
                         <tr>
+                            <td>Room:</td>
+                            <td>{{$res.Room.RoomName}}</td>
+                        </tr>
+                        <tr>
                             <td>Arrival:</td>
-                            <td></td>
+                            <td>{{index .StringMap "start_date"}}</td>
                         </tr>
                         <tr>
                             <td>Departure:</td>
-                            <td></td>
+                            <td>{{index .StringMap "end_date"}}</td>
                         </tr>
                         <tr>
                             <td>Email:</td>
@@ -35,8 +38,8 @@
                         </tr>
                     </tbody>
                 </table>
+
             </div>
         </div>
-
-
+    </div>
 {{end}}

@@ -1,11 +1,12 @@
 {{template "base" .}}
 
 {{define "content"}}
-
     <div class="container">
-        <h1>Hi this is Contact page</h1>
+        <div class="row">
+            <div class="col">
+                <h1>This is the contact page</h1>
+
+            </div>
+        </div>
     </div>
-    <h3> HI buddy </h3>
-
-
 {{end}}
