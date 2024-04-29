@@ -12,9 +12,7 @@ import (
 )
 
 func listenForMail() {
-
 	go func() {
-
 		for {
 			msg := <-app.MailChan
 			sendMsg(msg)
@@ -31,9 +29,9 @@ func sendMsg(m models.MailData) {
 	server.SendTimeout = 10 * time.Second
 
 	client, err := server.Connect()
-
 	if err != nil {
-		errorLog.Println(err)
+		log.Println("Error connecting to SMTP server:", err)
+		return
 	}
 
 	email := mail.NewMSG()
@@ -42,21 +40,20 @@ func sendMsg(m models.MailData) {
 	if m.Template == "" {
 		email.SetBody(mail.TextHTML, string(m.Content))
 	} else {
-		data, err := ioutil.ReadFile(fmt.Sprintf("./email-templates/%s", m.Template))
-
+		templatePath := fmt.Sprintf("./email-templates/%s", m.Template)
+		templateContent, err := ioutil.ReadFile(templatePath)
 		if err != nil {
-			app.ErrorLog.Println(err)
+			log.Println("Error reading template file:", err)
+			return
 		}
 
-		mailTemplate := string(data)
-		msgToSend := strings.Replace(mailTemplate, "[%body%]", m.Content, 1)
+		msgToSend := strings.Replace(string(templateContent), "[%body%]", m.Content, 1)
 		email.SetBody(mail.TextHTML, msgToSend)
 	}
 
 	err = email.Send(client)
-
 	if err != nil {
-		log.Println(err)
+		log.Println("Error sending email:", err)
 	} else {
 		log.Println("Email sent!")
 	}
