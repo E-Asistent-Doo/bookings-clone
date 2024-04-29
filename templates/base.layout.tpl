@@ -16,6 +16,16 @@
               href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.0/dist/css/datepicker-bs4.min.css">
         <link rel="stylesheet" type="text/css" href="https://unpkg.com/notie/dist/notie.min.css">
         <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
+
+        <style>
+            .my-footer {
+                height: 9em;
+                background-color: #163b65;
+                padding: 1em;
+                color: white;
+                font-size: 80%;
+            }
+        </style>
     </head>
 
     <body>
@@ -78,23 +88,35 @@
 
     {{end}}
 
-
-    <div class="row my-footer">
-
-        <div class="col">
-            Left
+    <footer class="row row-cols-1 row-cols-sm-2 row-cols-md-5 py-5 my-5 border-top" style="background-color: #163b65; color: white;">
+        <div class="col mb-3">
+          <a href="/" class="d-flex align-items-center mb-3 link-body-emphasis text-decoration-none">
+            <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
+          </a>
+          <p class="text-body-secondary">&copy; 2024</p>
         </div>
-
-        <div class="col">
-            Middle
+    
+        <div class="col mb-3">
+    
         </div>
-
-        <div class="col">
-            Right
+    
+        <div class="col mb-3">
+            <strong>Forth Smyte Bad &amp; Breakfast</strong> <br>
+            Rocky Broad 101 <br>
+            Northbrook, Ontario <br>
+            Canada <br>
+            (416) 555-333 <br>
+            <a href="mailto:info@bookings.com">mMail to: info@bookings.com</a> <br>
         </div>
+    
+        <div class="col mb-3">
 
-    </div>
-
+        </div>
+    
+        <div class="col mb-3">
+            <strong>Your HOME away from HOME</strong>
+        </div>
+      </footer>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
             integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"

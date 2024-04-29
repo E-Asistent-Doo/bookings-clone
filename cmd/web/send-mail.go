@@ -30,7 +30,7 @@ func sendMsg(m models.MailData) {
 
 	client, err := server.Connect()
 	if err != nil {
-		log.Println("Error connecting to SMTP server:", err)
+		log.Println("PLEASE START MAILHOG MANULAY FROM APP FOLDER, Error connecting to SMTP server:", err)
 		return
 	}
 
@@ -43,7 +43,7 @@ func sendMsg(m models.MailData) {
 		templatePath := fmt.Sprintf("./email-templates/%s", m.Template)
 		templateContent, err := ioutil.ReadFile(templatePath)
 		if err != nil {
-			log.Println("Error reading template file:", err)
+			log.Println("PLEASE START MAILHOG MANULAY FROM APP FOLDER, Error reading template file:", err)
 			return
 		}
 
@@ -53,7 +53,7 @@ func sendMsg(m models.MailData) {
 
 	err = email.Send(client)
 	if err != nil {
-		log.Println("Error sending email:", err)
+		log.Println("PLEASE START MAILHOG MANULAY FROM APP FOLDER, Error sending email:", err)
 	} else {
 		log.Println("Email sent!")
 	}
