@@ -42,7 +42,7 @@ func main() {
 
 	defer close(app.MailChan)
 	fmt.Println("Starting mail listener...")
-	listenForMail()
+	listenForMail(dbConnPollSettings.MailhogHost)
 
 	srv := &http.Server{
 		Addr:    portNumber,

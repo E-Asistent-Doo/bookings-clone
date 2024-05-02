@@ -1,0 +1,72 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:16.2
+    container_name: postgres
+    networks:
+        new:
+            aliases:
+                - database
+    environment:
+        POSTGRES_DB: bookings
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: root
+    ports:
+        - "5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-h", "postgres", "-U", "postgres"]
+      interval: 10s
+      retries: 5
+  migrate:
+      image: migrate/migrate
+      networks:
+          - new
+      volumes:
+          - ./migrations:/migrations
+      command: ["-path", "/migrations", "-database",  "postgres://postgres:root@db:5432/bookings?sslmode=disable", "up", "14"]
+      depends_on:
+        db:
+          condition: service_healthy
+      links: 
+          - db
+  go:
+    build: .
+    container_name: go
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgres://postgres:root@db:5432/bookings
+      #DATABASE_URL: postgres://your_username:your_password@postgres:5432/your_database
+    networks:
+    - new
+  caddy:
+    image: caddy:latest
+    container_name: caddy
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+    - new
+  mailhog:
+    image: mailhog/mailhog
+    container_name: 'mailhog'
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+    - new
+volumes:
+  postgres_data:
+  caddy_data:
+  caddy_config:
+  pg_data:
+networks:
+  new:

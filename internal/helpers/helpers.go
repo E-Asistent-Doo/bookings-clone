@@ -42,6 +42,7 @@ func ExecFlag() models.DBConnPoolSettings {
 	dbPass := flag.String("dbpass", "root", "Database password")
 	dbPort := flag.String("dbport", "5432", "Database port")
 	dbSSL := flag.String("dbssl", "disable", "Database ssl settings (disable, prefer, require)")
+	mailhogHost := flag.String("mailhog-host", "localhost", "Mailhog host for ports 1025/8025 on 8025 listening")
 
 	openFlag := flag.Bool("o", false, "Automatically open the link in the default browser")
 	flag.Parse()
@@ -50,12 +51,13 @@ func ExecFlag() models.DBConnPoolSettings {
 	app.UseCache = *useCache
 
 	return models.DBConnPoolSettings{
-		DBHost:   dbHost,
-		DBName:   dbName,
-		DBUser:   dbUser,
-		DBPass:   dbPass,
-		DBPort:   dbPort,
-		DBSSL:    dbSSL,
-		OpenFlag: openFlag,
+		DBHost:      dbHost,
+		DBName:      dbName,
+		DBUser:      dbUser,
+		DBPass:      dbPass,
+		DBPort:      dbPort,
+		DBSSL:       dbSSL,
+		OpenFlag:    openFlag,
+		MailhogHost: mailhogHost,
 	}
 }

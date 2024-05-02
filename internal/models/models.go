@@ -64,14 +64,16 @@ type MailData struct {
 	Subject  string
 	Content  string
 	Template string
+	Host     string
 }
 
 type DBConnPoolSettings struct {
-	DBHost   *string
-	DBName   *string
-	DBUser   *string
-	DBPass   *string
-	DBPort   *string
-	DBSSL    *string
-	OpenFlag *bool
+	DBHost      *string
+	DBName      *string
+	DBUser      *string
+	DBPass      *string
+	DBPort      *string
+	DBSSL       *string
+	OpenFlag    *bool
+	MailhogHost *string
 }

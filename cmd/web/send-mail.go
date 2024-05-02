@@ -11,18 +11,18 @@ import (
 	mail "github.com/xhit/go-simple-mail/v2"
 )
 
-func listenForMail() {
+func listenForMail(mailhogHost *string) {
 	go func() {
 		for {
 			msg := <-app.MailChan
-			sendMsg(msg)
+			sendMsg(msg, mailhogHost)
 		}
 	}()
 }
 
-func sendMsg(m models.MailData) {
+func sendMsg(m models.MailData, mailhogHost *string) {
 	server := mail.NewSMTPClient()
-	server.Host = "localhost"
+	server.Host = *mailhogHost
 	server.Port = 1025
 	server.KeepAlive = false
 	server.ConnectTimeout = 10 * time.Second
