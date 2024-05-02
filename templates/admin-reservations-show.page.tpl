@@ -18,8 +18,8 @@
 
         <form action="/admin/reservations/{{$src}}/{{$res.ID}}/show" method="post" class="" novalidate>
             <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
-            <input type="hidden" name="year" value="{{index .StringMap "year"}}">
-            <input type="hidden" name="month" value="{{index .StringMap "month"}}">
+            <input type="hidden" name="year" id="year" value="{{index .StringMap "year"}}">
+            <input type="hidden" name="month" id="month" value="{{index .StringMap "month"}}">
 
             <div class="form-group mt-3">
                 <label for="first_name">First Name:</label>
