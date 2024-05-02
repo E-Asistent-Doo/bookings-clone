@@ -40,4 +40,4 @@ RUN chmod +x ./docker-gs-ping
 HEALTHCHECK CMD pg_isready -h postgres -U postgres
 
 # Run the application with command-line parameters
-CMD ["./docker-gs-ping", "-cache=true", "-production=true", "-dbhost=db", "-mailhog-host=localhost"]
+CMD ["./docker-gs-ping", "-cache=true", "-production=true", "-dbhost=db", "-mailhog-host=mailhog"]
